@@ -1,0 +1,503 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+SHOW WARNINGS;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Medico`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Medico` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Medico` (
+  `idMedico` INT NOT NULL,
+  `Nombre` VARCHAR(45) NOT NULL,
+  `Especialidad` VARCHAR(45) NULL,
+  `fecha_nac` DATE NOT NULL,
+  `Apellido` VARCHAR(45) NULL,
+  PRIMARY KEY (`idMedico`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Paciente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Paciente` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Paciente` (
+  `Dni` VARCHAR(9) NOT NULL,
+  `Nombre` VARCHAR(45) NOT NULL,
+  `Fecha_nac` DATE NOT NULL,
+  `Apellido` VARCHAR(45) NOT NULL,
+  `Dirección` VARCHAR(45) NULL,
+  `Telefono` INT NULL,
+  PRIMARY KEY (`Dni`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Departamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Departamento` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Departamento` (
+  `idDepartamento` INT NOT NULL,
+  `Nombre` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idDepartamento`, `Nombre`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Personal`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Personal` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Personal` (
+  `idPersonal` INT NOT NULL,
+  `Nombre` VARCHAR(45) NOT NULL,
+  `Fecha_nac` VARCHAR(45) NOT NULL,
+  `Apellido` VARCHAR(45) NULL,
+  `Departamento_idDepartamento` INT NOT NULL,
+  `Departamento_Nombre` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`idPersonal`),
+  CONSTRAINT `fk_Personal_Departamento1`
+    FOREIGN KEY (`Departamento_idDepartamento` , `Departamento_Nombre`)
+    REFERENCES `mydb`.`Departamento` (`idDepartamento` , `Nombre`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Unidad`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Unidad` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Unidad` (
+  `idUnidad` INT NOT NULL,
+  `Tipo` VARCHAR(45) NOT NULL,
+  `Disponible` TINYINT NULL,
+  PRIMARY KEY (`idUnidad`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Historia_p`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Historia_p` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Historia_p` (
+  `idHistoria_p` INT NOT NULL,
+  `Fecha_e` DATE NOT NULL,
+  `Fecha_s` DATE NULL,
+  `Unidad_idUnidad` INT NOT NULL,
+  `Paciente_Dni` VARCHAR(9) NOT NULL,
+  PRIMARY KEY (`idHistoria_p`),
+  CONSTRAINT `fk_Historia_p_Unidad1`
+    FOREIGN KEY (`Unidad_idUnidad`)
+    REFERENCES `mydb`.`Unidad` (`idUnidad`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Historia_p_Paciente1`
+    FOREIGN KEY (`Paciente_Dni`)
+    REFERENCES `mydb`.`Paciente` (`Dni`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Cita`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Cita` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Cita` (
+  `idCita` INT NOT NULL,
+  `Fecha_c` DATE NOT NULL,
+  `Medico_idMedico` INT NOT NULL,
+  `Paciente_Dni` VARCHAR(9) NOT NULL,
+  `Unidad_idUnidad` INT NOT NULL,
+  `Informe` VARCHAR(255) NULL,
+  PRIMARY KEY (`idCita`, `Unidad_idUnidad`),
+  CONSTRAINT `fk_Cita_Medico`
+    FOREIGN KEY (`Medico_idMedico`)
+    REFERENCES `mydb`.`Medico` (`idMedico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cita_Paciente1`
+    FOREIGN KEY (`Paciente_Dni`)
+    REFERENCES `mydb`.`Paciente` (`Dni`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cita_Unidad1`
+    FOREIGN KEY (`Unidad_idUnidad`)
+    REFERENCES `mydb`.`Unidad` (`idUnidad`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Unidad_has_Medico`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Unidad_has_Medico` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Unidad_has_Medico` (
+  `Unidad_idUnidad` INT NOT NULL,
+  `Medico_idMedico` INT NOT NULL,
+  PRIMARY KEY (`Unidad_idUnidad`, `Medico_idMedico`),
+  CONSTRAINT `fk_Unidad_has_Medico_Unidad1`
+    FOREIGN KEY (`Unidad_idUnidad`)
+    REFERENCES `mydb`.`Unidad` (`idUnidad`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Unidad_has_Medico_Medico1`
+    FOREIGN KEY (`Medico_idMedico`)
+    REFERENCES `mydb`.`Medico` (`idMedico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Informe`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Informe` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Informe` (
+  `idInforme` INT NOT NULL,
+  `Cita_idCita` INT NOT NULL,
+  `Cita_Unidad_idUnidad` INT NOT NULL,
+  `Tratamiento` VARCHAR(255) NULL,
+  PRIMARY KEY (`idInforme`, `Cita_idCita`, `Cita_Unidad_idUnidad`),
+  CONSTRAINT `fk_Informe_Cita1`
+    FOREIGN KEY (`Cita_idCita` , `Cita_Unidad_idUnidad`)
+    REFERENCES `mydb`.`Cita` (`idCita` , `Unidad_idUnidad`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Medicamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Medicamento` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Medicamento` (
+  `idMedicamento` INT NOT NULL,
+  `Nombre` VARCHAR(45) NULL,
+  PRIMARY KEY (`idMedicamento`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Patologia`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Patologia` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Patologia` (
+  `idPatologia` INT NOT NULL,
+  `Nombre` VARCHAR(45) NULL,
+  `Descripcion` VARCHAR(255) NULL,
+  PRIMARY KEY (`idPatologia`))
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Patologias_por_informe`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Patologias_por_informe` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Patologias_por_informe` (
+  `Patologia_idPatologia` INT NOT NULL,
+  `Informe_idInforme` INT NOT NULL,
+  `Informe_Cita_idCita` INT NOT NULL,
+  `Informe_Cita_Unidad_idUnidad` INT NOT NULL,
+  PRIMARY KEY (`Informe_idInforme`, `Informe_Cita_idCita`, `Informe_Cita_Unidad_idUnidad`),
+  CONSTRAINT `fk_Patologia_has_Informe_Patologia1`
+    FOREIGN KEY (`Patologia_idPatologia`)
+    REFERENCES `mydb`.`Patologia` (`idPatologia`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Patologia_has_Informe_Informe1`
+    FOREIGN KEY (`Informe_idInforme` , `Informe_Cita_idCita` , `Informe_Cita_Unidad_idUnidad`)
+    REFERENCES `mydb`.`Informe` (`idInforme` , `Cita_idCita` , `Cita_Unidad_idUnidad`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Medicamento_por_Patologia`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Medicamento_por_Patologia` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Medicamento_por_Patologia` (
+  `Medicamento_idMedicamento` INT NOT NULL,
+  `Patologia_idPatologia` INT NOT NULL,
+  PRIMARY KEY (`Medicamento_idMedicamento`),
+  CONSTRAINT `fk_Medicamento_has_Patologia_Medicamento1`
+    FOREIGN KEY (`Medicamento_idMedicamento`)
+    REFERENCES `mydb`.`Medicamento` (`idMedicamento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Medicamento_has_Patologia_Patologia1`
+    FOREIGN KEY (`Patologia_idPatologia`)
+    REFERENCES `mydb`.`Patologia` (`idPatologia`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`Informe_has_Medicamento`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`Informe_has_Medicamento` ;
+
+SHOW WARNINGS;
+CREATE TABLE IF NOT EXISTS `mydb`.`Informe_has_Medicamento` (
+  `Informe_idInforme` INT NOT NULL,
+  `Informe_Cita_idCita` INT NOT NULL,
+  `Medicamento_idMedicamento` INT NOT NULL,
+  `Fecha` DATE NULL,
+  PRIMARY KEY (`Informe_idInforme`, `Informe_Cita_idCita`, `Medicamento_idMedicamento`),
+  CONSTRAINT `fk_Informe_has_Medicamento_Informe1`
+    FOREIGN KEY (`Informe_idInforme` , `Informe_Cita_idCita`)
+    REFERENCES `mydb`.`Informe` (`idInforme` , `Cita_idCita`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Informe_has_Medicamento_Medicamento1`
+    FOREIGN KEY (`Medicamento_idMedicamento`)
+    REFERENCES `mydb`.`Medicamento` (`idMedicamento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SHOW WARNINGS;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Medico`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (001, 'Antonio', 'Cirujía', '1991-10-10', 'De la Torre');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (002, 'Jesús', 'Medicina interna', '1990-12-12', 'Blanco');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (003, 'Alvaro', 'Dermatología', '1998-01-01', 'Negro');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (004, 'Armando', 'Oncología', '1979-02-02', 'Rojo');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (005, 'Guillermo', 'Medicina General', '1977-03-03', 'Amarillo');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (006, 'Felipe', 'Psiquiatria', '1988-04-04', 'Rosa');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (007, 'María', 'Pediatría', '1969-05-05', 'Verde');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (008, 'Elena', 'Medicina General', '1992-06-06', 'Azul');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (009, 'Alba', 'Medicina interna', '1982-07-07', 'Gris');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (010, 'José', 'Medicina General', '1983-08-08', 'Naranja');
+INSERT INTO `mydb`.`Medico` (`idMedico`, `Nombre`, `Especialidad`, `fecha_nac`, `Apellido`) VALUES (DEFAULT, DEFAULT, '', DEFAULT, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Paciente`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000A', 'Penelope', '2002-09-09', 'Lopez', 'Calle primera nº2', 654565456);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000C', 'Omar', '1999-10-10', 'Alfa', 'Calle segunda nº1', 765654543);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000D', 'Juan', '2000-02-03', 'Omega', 'Calle tercera nº4', 952934854);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000E', 'Carlos', '1990-03-02', 'Ganma', 'Calle cuarta nº3', 951334234);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000F', 'Elena', '1989-04-05', 'Beta', 'Calle quinta nº6', 902349023);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000G', 'Rocio', '1988-03-04', 'Epsilon', 'Calle sexta nº7', 722342934);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000H', 'Tomas', '1982-06-07', 'Lambda', 'Calle septima nº8', 666504592);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000I', 'Sara', '1991-07-09', 'Augusto', 'Calle optava nº9', 645434564);
+INSERT INTO `mydb`.`Paciente` (`Dni`, `Nombre`, `Fecha_nac`, `Apellido`, `Dirección`, `Telefono`) VALUES ('00000000B', 'Oswaldo', '1994-09-09', 'Rey', 'Calle novena nº10', 678901234);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Departamento`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Departamento` (`idDepartamento`, `Nombre`) VALUES (001, 'Administración');
+INSERT INTO `mydb`.`Departamento` (`idDepartamento`, `Nombre`) VALUES (002, 'Urgencias');
+INSERT INTO `mydb`.`Departamento` (`idDepartamento`, `Nombre`) VALUES (003, 'Ambulancias');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Personal`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Personal` (`idPersonal`, `Nombre`, `Fecha_nac`, `Apellido`, `Departamento_idDepartamento`, `Departamento_Nombre`) VALUES (001, 'Anabel', '1992-05-06', 'Goyo', 001, 'Administración');
+INSERT INTO `mydb`.`Personal` (`idPersonal`, `Nombre`, `Fecha_nac`, `Apellido`, `Departamento_idDepartamento`, `Departamento_Nombre`) VALUES (002, 'Teresa', '1993-02-06', 'Amabar', 002, 'Urgencias');
+INSERT INTO `mydb`.`Personal` (`idPersonal`, `Nombre`, `Fecha_nac`, `Apellido`, `Departamento_idDepartamento`, `Departamento_Nombre`) VALUES (003, 'Ernesto', '1991-03-06', 'Zirio', 003, 'Ambulancias');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Unidad`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Unidad` (`idUnidad`, `Tipo`, `Disponible`) VALUES (001, 'Cama', 0);
+INSERT INTO `mydb`.`Unidad` (`idUnidad`, `Tipo`, `Disponible`) VALUES (002, 'Habitación', 0);
+INSERT INTO `mydb`.`Unidad` (`idUnidad`, `Tipo`, `Disponible`) VALUES (003, 'Consulta 01', 0);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Historia_p`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Historia_p` (`idHistoria_p`, `Fecha_e`, `Fecha_s`, `Unidad_idUnidad`, `Paciente_Dni`) VALUES (001, '1890-10-10', '2100-03-02', 001, '00000000A');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Cita`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Cita` (`idCita`, `Fecha_c`, `Medico_idMedico`, `Paciente_Dni`, `Unidad_idUnidad`, `Informe`) VALUES (001, '2019-01-02', 001, '00000000A', 001, NULL);
+INSERT INTO `mydb`.`Cita` (`idCita`, `Fecha_c`, `Medico_idMedico`, `Paciente_Dni`, `Unidad_idUnidad`, `Informe`) VALUES (002, '2019-04-09', 002, '00000000B', 002, NULL);
+INSERT INTO `mydb`.`Cita` (`idCita`, `Fecha_c`, `Medico_idMedico`, `Paciente_Dni`, `Unidad_idUnidad`, `Informe`) VALUES (003, '2019-12-10', 003, '00000000C', 003, NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Unidad_has_Medico`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Unidad_has_Medico` (`Unidad_idUnidad`, `Medico_idMedico`) VALUES (001, 001);
+INSERT INTO `mydb`.`Unidad_has_Medico` (`Unidad_idUnidad`, `Medico_idMedico`) VALUES (002, 002);
+INSERT INTO `mydb`.`Unidad_has_Medico` (`Unidad_idUnidad`, `Medico_idMedico`) VALUES (003, 003);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Informe`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Informe` (`idInforme`, `Cita_idCita`, `Cita_Unidad_idUnidad`, `Tratamiento`) VALUES (001, 001, 001, 'Salta');
+INSERT INTO `mydb`.`Informe` (`idInforme`, `Cita_idCita`, `Cita_Unidad_idUnidad`, `Tratamiento`) VALUES (002, 002, 002, 'Camina');
+INSERT INTO `mydb`.`Informe` (`idInforme`, `Cita_idCita`, `Cita_Unidad_idUnidad`, `Tratamiento`) VALUES (003, 003, 003, 'Corre');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Medicamento`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Medicamento` (`idMedicamento`, `Nombre`) VALUES (001, 'XF001');
+INSERT INTO `mydb`.`Medicamento` (`idMedicamento`, `Nombre`) VALUES (002, 'XZ001');
+INSERT INTO `mydb`.`Medicamento` (`idMedicamento`, `Nombre`) VALUES (003, 'XR003');
+INSERT INTO `mydb`.`Medicamento` (`idMedicamento`, `Nombre`) VALUES (004, 'XC004');
+INSERT INTO `mydb`.`Medicamento` (`idMedicamento`, `Nombre`) VALUES (005, 'XV005');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Patologia`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Patologia` (`idPatologia`, `Nombre`, `Descripcion`) VALUES (001, 'Asma', 'Obstrucción vias aereas');
+INSERT INTO `mydb`.`Patologia` (`idPatologia`, `Nombre`, `Descripcion`) VALUES (002, 'Artritis', 'Perdida de funciones arteriales');
+INSERT INTO `mydb`.`Patologia` (`idPatologia`, `Nombre`, `Descripcion`) VALUES (003, 'Hepatitis B', 'Enfermedad de transmision sexual');
+INSERT INTO `mydb`.`Patologia` (`idPatologia`, `Nombre`, `Descripcion`) VALUES (004, 'Resfriado', 'Virus');
+INSERT INTO `mydb`.`Patologia` (`idPatologia`, `Nombre`, `Descripcion`) VALUES (005, 'Gripe', 'Virus');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Patologias_por_informe`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Patologias_por_informe` (`Patologia_idPatologia`, `Informe_idInforme`, `Informe_Cita_idCita`, `Informe_Cita_Unidad_idUnidad`) VALUES (001, 001, 001, 001);
+INSERT INTO `mydb`.`Patologias_por_informe` (`Patologia_idPatologia`, `Informe_idInforme`, `Informe_Cita_idCita`, `Informe_Cita_Unidad_idUnidad`) VALUES (002, 002, 002, 002);
+INSERT INTO `mydb`.`Patologias_por_informe` (`Patologia_idPatologia`, `Informe_idInforme`, `Informe_Cita_idCita`, `Informe_Cita_Unidad_idUnidad`) VALUES (003, 003, 003, 003);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Medicamento_por_Patologia`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Medicamento_por_Patologia` (`Medicamento_idMedicamento`, `Patologia_idPatologia`) VALUES (001, 001);
+INSERT INTO `mydb`.`Medicamento_por_Patologia` (`Medicamento_idMedicamento`, `Patologia_idPatologia`) VALUES (002, 002);
+INSERT INTO `mydb`.`Medicamento_por_Patologia` (`Medicamento_idMedicamento`, `Patologia_idPatologia`) VALUES (003, 003);
+INSERT INTO `mydb`.`Medicamento_por_Patologia` (`Medicamento_idMedicamento`, `Patologia_idPatologia`) VALUES (004, 004);
+INSERT INTO `mydb`.`Medicamento_por_Patologia` (`Medicamento_idMedicamento`, `Patologia_idPatologia`) VALUES (005, 005);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `mydb`.`Informe_has_Medicamento`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `mydb`;
+INSERT INTO `mydb`.`Informe_has_Medicamento` (`Informe_idInforme`, `Informe_Cita_idCita`, `Medicamento_idMedicamento`, `Fecha`) VALUES (001, 001, 001, '2019-03-04');
+INSERT INTO `mydb`.`Informe_has_Medicamento` (`Informe_idInforme`, `Informe_Cita_idCita`, `Medicamento_idMedicamento`, `Fecha`) VALUES (002, 002, 002, '2020-07-08');
+INSERT INTO `mydb`.`Informe_has_Medicamento` (`Informe_idInforme`, `Informe_Cita_idCita`, `Medicamento_idMedicamento`, `Fecha`) VALUES (003, 003, 003, '2019-07-16');
+
+COMMIT;
+

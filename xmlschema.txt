@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<xs:schema>
+
+
+	<xs:element name="Medico">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idMedico" tpye="xs:integer" />
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Especialidad">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="fecha_nac" type="xs:date" />
+				<xs:element name="Apellido">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	
+
+
+	<xs:element name="Unidad">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idUnidad" type="xs:integer" />
+				<xs:element name="Tipo">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Disponible">
+					<xs:simpleType>
+						<xs:restriction base="xs.integer">
+							<xs:minInclusive value="0"/>
+      							<xs:maxInclusive value="1"/>
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>				
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	
+	<xs:element name="Unidad_has_Medico">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="Unidad_idUnidad" type="xs:integer" />
+				<xs:attribute name="Medico_idMedico" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="Patologia">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idPatologia" type="xs:integer" />
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Descripcion">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="Medicamento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idMedicamento" type="xs:integer" />
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+
+	<xs:element name="Paciente">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Dni">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="9" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Apellidos">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="9" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:element name="Direccion">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="9" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Fecha_nac" type="xs:date" />
+				<xs:attribute name="Telefono"  type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Departamento">
+		<xs:complexType>
+			<xs:sequence>			
+				<xs:attribute name="id_Departamento" type="xs:integer" />
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="Personal">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="id_Personal" type="xs:integer" />
+				<xs:element name="Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Fecha_nac" type="xs:date" />
+				<xs:element name="Apellido">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Departamento_idDepartamento" type="xs:integer" />
+				<xs:element name="Departamento_Nombre">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="45" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="Cita">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idCita" type="xs:integer" />
+				<xs:attribute name="Fecha_c" type="xs:date" />
+				<xs:element name="Informe">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="255" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Medico_idMedico" type="xs:integer" />
+				<xs:element name="Paciente_Dni">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="9" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Unidad_idUnidad" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	
+
+
+
+ 	<xs:element name="Historia">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idHistoria" type="xs:integer" />
+				<xs:attribute name="Fecha_e" type="xs:date" />
+				<xs:attribute name="Fecha_s" type="xs:date" />
+				<xs:attribute name="Unidad_idUnidad" type="xs:integer" />
+				<xs:element name="Paciente_Dni">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="9" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+ 	<xs:element name="Informe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="idInforme" type="xs:integer" />
+				<xs:element name="Tratamiento">
+					<xs:simpleType>
+						<xs:restriction base="xs.string">
+							<xs:maxLengthvalue="255" />
+						</xs:restriction>
+					</xs:simpleType>	
+				</xs:element>
+				<xs:attribute name="Cita_idCita" type="xs:integer" />
+				<xs:attribute name="Cita_Unidad_idUnidad" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<xs:element name="Patologias_por_informe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="Patologia_idPatologia" type="xs:integer" />
+				<xs:attribute name="Informe_idInforme" type="xs:integer" />
+				<xs:attribute name="Informe_Cita_idCita" type="xs:integer" />
+				<xs:attribute name="Infrome_Cita_Unidad_idUnidad" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<xs:element name="Medicamento_por_Patologia">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="Medicamento_idMedicamento" type="xs:integer" />
+				<xs:attribute name="Patologia_idPatologia" type="xs:integer" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+
+
+	<xs:element name="Informe_has_Medicamento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:attribute name="Informe_idInforme" type="xs:integer" />
+				<xs:attribute name="Informe_Cita_idCita" type="xs:integer" />
+				<xs:attribute name="Medicamento_idMedicamento" type="xs:integer" />
+				<xs:attribute name="Fecha" type="xs:date" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>

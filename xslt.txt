@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+<html> 
+<body>
+  <h2>Pacientes</h2>
+  <table border="1">
+    <tr bgcolor="#9999ff">
+      <th style="text-align:left">Dni</th>
+      <th style="text-align:left">Nombre</th>
+      <th style="text-align:left">Apellido</th>
+      <th style="text-align:left">Fecha de Nacimiento</th>
+      <th style="text-align:left">Direccion</th>
+      <th style="text-align:left">Telefono</th>
+    </tr>
+    <xsl:for-each select="Pacientes/Paciente">
+    <tr>
+      <td><xsl:value-of select="Dni"/></td>
+      <td><xsl:value-of select="Nombre"/></td>
+      <td><xsl:value-of select="Apellido"/></td>
+      <td><xsl:value-of select="Fecha_nac"/></td>
+      <td><xsl:value-of select="Dirección"/></td>
+      <td><xsl:value-of select="Telefono"/></td>
+    </tr>
+    </xsl:for-each>
+  </table>
+</body>
+</html>
+</xsl:template>
+</xsl:stylesheet>
+
